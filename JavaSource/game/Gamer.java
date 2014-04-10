@@ -59,18 +59,17 @@ public class Gamer {
 	
 	
 	public String getNome() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.Nome;
 	}
 
 	public String getLogin() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.Login;
 	}
 
 	public String getSenha() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.Senha;
 	}
 	
 

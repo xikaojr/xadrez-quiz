@@ -33,12 +33,12 @@
   </servlet-mapping>
   
   <servlet>
-	    <servlet-name>requestUsuario</servlet-name>
+	    <servlet-name>cadUsuario</servlet-name>
     	<servlet-class>dao.Jogador</servlet-class>
   </servlet>
   
   <servlet-mapping>
-    <servlet-name>requestUsuario</servlet-name>
+    <servlet-name>cadUsuario</servlet-name>
     <url-pattern>/cadUsuario</url-pattern>
   </servlet-mapping>
   
