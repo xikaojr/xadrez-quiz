@@ -1,6 +1,8 @@
 <%@taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <%@ page import="game.*"%>
+<%@ page import="dao.*"%>
+
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
@@ -65,6 +67,10 @@
 			<div class="col-md-8">
 				<h3 id="overview-doctype">Results</h3>
 				${jogo}
+			</div>
+			
+			<div class="cadastrar">
+			 	<a class="btn btn-success" href="cadUsuario.jsp" >Cadastrar Usuário</a>
 			</div>
 		</div>
 	</div>

@@ -2,12 +2,19 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
+import sun.security.util.Password;
+
 
 public class Gamer {
-
+	
+	public int Id;
 	public int Acertos;
 	public int Tentativas;
 	public int Numero;
+	public String Nome;
+	public String Login;
+	public String Senha;
+	
 	public List<String> Respostas = new ArrayList<String>();
 	
 	
@@ -16,6 +23,10 @@ public class Gamer {
 		this.Numero = num;
 		this.Acertos = 0;
 		this.Tentativas = 0;
+	}
+	
+	public Gamer() {
+
 	}
 	
 	public String printResult(){
@@ -32,6 +43,34 @@ public class Gamer {
 				+ "<td>%f%s</td>"
 				+ "</tr>"
 				, this.Numero + 1, this.Tentativas, this.Acertos, percentual,"%");
+	}
+	
+	public void setNome(String nome) {
+		this.Nome = nome;
+	}
+
+	public void setLogin(String login) {
+		this.Login = login;
+	}
+
+	public void setSenha(String senha) {
+		this.Senha = senha;
+	}
+	
+	
+	public String getNome() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getLogin() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getSenha() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 
