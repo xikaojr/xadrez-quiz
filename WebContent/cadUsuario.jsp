@@ -18,24 +18,29 @@
 			<div class="col-md-12">
 				<h1 id="overview" class="page-header">Cadastro de Usuário</h1>
 			</div>
-			<div class="col-md-12">
+
+			<% if (request.getAttribute("errorMessage") != null) { %>
+						<div class="col-md-12">
 				<div class="alert alert-danger">${errorMessage}</div>
 			</div>
+			<% } %>
+
 			<form role="form" name="cadUsuario" method="POST" action="cadUsuario">
 				<div class="col-md-12">
 					<div class="form-group col-md-4">
 						<label for="nome">Nome</label> <input type="text"
-							class="form-control" id="nome" name="nome" value="${jogador.nome}"
-							placeholder="Entre com seu nome">
+							class="form-control" id="nome" name="nome"
+							value="${jogador.nome}" placeholder="Entre com seu nome">
 					</div>
 					<div class="form-group col-md-4">
 						<label for="login">Login</label> <input type="text"
-							class="form-control" id="login" name="login" value="${jogador.login}" placeholder="Login">
+							class="form-control" id="login" name="login"
+							value="${jogador.login}" placeholder="Login">
 					</div>
 					<div class="form-group col-md-4">
 						<label for="password">Password</label> <input type="password"
-							class="form-control" id="password" name="password" value="${jogador.senha}"
-							placeholder="Password">
+							class="form-control" id="password" name="password"
+							value="${jogador.senha}" placeholder="Password">
 					</div>
 				</div>
 				<div class="" style="clear: both;"></div>

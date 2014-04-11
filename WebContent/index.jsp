@@ -1,3 +1,4 @@
+<%@page import="com.sun.corba.se.spi.activation.Repository"%>
 <%@taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <%@ page import="game.*"%>
@@ -26,9 +27,32 @@
 			<div class="col-md-12">
 				<h1 id="overview" class="page-header">Chess Quiz</h1>
 			</div>
+			<%
+				if (request.getAttribute("successMessage") != null) {
+			%>
 			<div class="col-md-12">
 				<div class="alert alert-success">${successMessage}</div>
 			</div>
+			<%
+				}
+			%>
+			
+			<%
+				if (request.getAttribute("errorMessage") != null) {
+			%>
+			<div class="col-md-12">
+				<div class="alert alert-danger">${errorMessage}</div>
+			</div>
+			<%
+				}
+			%>
+
+			<%
+				if (request.getSession().getAttribute("jogador") != null) {
+					Gamer jogador = (Gamer)request.getSession().getAttribute("jogador");
+					
+			%>
+
 			<h3 id="overview-doctype">Boa Sorte!</h3>
 			<form method="post" action="requestGame" role="form">
 				<div class="col-md-4">
@@ -38,17 +62,9 @@
 							readonly="readonly" value="<%=Game.getRandCell()%>">
 					</div>
 					<div class="form-group">
-						<label for="gamer">Gamer</label> <select name="gamer"
-							class="form-control">
-							<%
-								for (int i = 1; i <= 10; i++) {
-							%>
-							<option value="<%=i%>">Jogador -
-								<%=i%></option>
-							<%
-								}
-							%>
-						</select>
+						<label for="gamer">Jogador: </label><%=jogador.Nome %> <br/> 
+						<input type="hidden" name="gamer" value="<%=jogador.Id %>" /> 
+						<label>Login: </label> <%=jogador.Login %>
 					</div>
 					<div class="form-group">
 						<label for="resposta">Resposta</label><br /> <input type="radio"
@@ -56,6 +72,20 @@
 						<br /> <input type="radio" name="resposta"
 							value="<%=Game.BLACK%>" /> <label>BLACK</label>
 					</div>
+				</div>
+				<%
+					} else {
+						
+					request.setAttribute("errorMessage", "Ocorreu um erro, verifique seus dados e tente novamente!");
+						
+					getServletConfig().getServletContext()
+								.getRequestDispatcher("/login.jsp")
+								.forward(request, response);
+					}
+				%>
+				<div class="col-md-8">
+					<h3 id="overview-doctype">Resultado Parcial</h3>
+					${jogo}
 				</div>
 				<div class="col-md-12">
 					<div class="well">
@@ -66,10 +96,6 @@
 					</div>
 				</div>
 			</form>
-		</div>
-		<div class="col-md-8">
-			<h3 id="overview-doctype">Results</h3>
-			${jogo}
 		</div>
 	</div>
 	</div>

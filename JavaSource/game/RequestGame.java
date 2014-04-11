@@ -23,29 +23,37 @@ public class RequestGame extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		jogo = new Game();
-		request.setAttribute("jogo", jogo.print());
+		request.setAttribute("jogo", jogo.print(request));
 	    getServletConfig().getServletContext()
 	    	.getRequestDispatcher("/index.jsp").forward(request,response);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    String cell = request.getParameter("cell");
-	    String gamer = request.getParameter("gamer");
 	    String resp = request.getParameter("resposta");
 	    
-	    String color = Game.getColor(cell);
 	    
-	    Gamer jogador = jogo.Gamers.get(Integer.parseInt(gamer) - 1);
-	    
-	    jogador.Tentativas++;
-	    jogador.Respostas.add(cell);
-	    
-	    if(color.compareTo(resp) == 0){
-	    	jogador.Acertos++;
-	    }
-	    request.setAttribute("jogo", jogo.print());
-	    getServletConfig().getServletContext()
-	    	.getRequestDispatcher("/index.jsp").forward(request,response);
+	    try {
+	    	
+	    	String color = Game.getColor(cell);
+	    	Gamer jogador = (Gamer)request.getSession().getAttribute("jogador");
+		    
+		    jogador.Tentativas++;
+		    jogador.Respostas.add(cell);
+		    
+		    if(color.compareTo(resp) == 0){
+		    	jogador.Acertos++;
+		    }
+		    
+		    request.setAttribute("jogo", jogo.print(request));
+		    getServletConfig().getServletContext()
+		    	.getRequestDispatcher("/index.jsp").forward(request,response);
+		} catch (Exception e) {
+		    request.setAttribute("errorMessage", e.getMessage());
+		    getServletConfig().getServletContext()
+		    	.getRequestDispatcher("/index.jsp").forward(request,response);
+
+		}
 	}
 		
 

@@ -2,9 +2,6 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
-import sun.security.util.Password;
-
-
 public class Gamer {
 	
 	public int Id;
@@ -34,15 +31,17 @@ public class Gamer {
 		if(this.Tentativas == 0){
 			return "";
 		}
+		
 		float percentual = ((float)this.Acertos / (float)this.Tentativas * (float)100);
+		
 		return String.format(""
 				+ "<tr>"
-				+ "<td>Jogador %d</td>"
+				+ "<td>Jogador %s</td>"
 				+ "<td>%d</td>"
 				+ "<td>%d</td>"
 				+ "<td>%f%s</td>"
 				+ "</tr>"
-				, this.Numero + 1, this.Tentativas, this.Acertos, percentual,"%");
+				, this.Login, this.Tentativas, this.Acertos, percentual,"%");
 	}
 	
 	public void setNome(String nome) {
@@ -70,6 +69,14 @@ public class Gamer {
 	public String getSenha() {
 		// TODO Auto-generated method stub
 		return this.Senha;
+	}
+
+	public int getId() {
+		return this.Id;
+	}
+
+	public void setId(int id) {
+		this.Id = id;
 	}
 	
 

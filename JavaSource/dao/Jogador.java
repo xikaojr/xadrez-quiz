@@ -23,8 +23,9 @@ public class Jogador extends HttpServlet {
 	public Jogador() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	private Connection con = Conexao.getConnection();
+	
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
