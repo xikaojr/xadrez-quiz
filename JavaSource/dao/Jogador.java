@@ -23,9 +23,8 @@ public class Jogador extends HttpServlet {
 	public Jogador() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	private Connection con = Conexao.getConnection();
-	
+
+	private static Connection con = Conexao.getConnection();
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -54,6 +53,65 @@ public class Jogador extends HttpServlet {
 		}
 	}
 
+	
+	public static ResultSet jaJogou(Gamer usuario) throws SQLException{
+		
+		String sql = "SELECT jogador_id FROM jogadas WHERE jogador_id = ?";
+		PreparedStatement preparador = con.prepareStatement(sql);
+		
+		preparador.setInt(1, usuario.getId());
+		
+		ResultSet res = preparador.executeQuery();
+		
+		return res;
+		
+	}
+	
+	public static ResultSet getJogadas(int id) throws Exception{
+		String sql = "SELECT * FROM jogadas WHERE jogador_id = ?";
+		PreparedStatement preparador = con.prepareStatement(sql);
+		
+		preparador.setInt(1, id);
+		
+		ResultSet res = preparador.executeQuery();
+		
+		return res;
+	}
+	
+	public static void cadastrarJogada(Gamer usuario, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		String sql;
+
+		try {
+			
+			if(jaJogou(usuario).next()){
+				sql = "UPDATE jogadas SET tentativas = ? , acertos = ? WHERE jogador_id = ?";	
+				PreparedStatement preparador = con.prepareStatement(sql);
+				
+				preparador.setInt(1, usuario.getTentativas());
+				preparador.setInt(2, usuario.getAcertos());
+				preparador.setInt(3, usuario.getId());
+				preparador.execute();
+				preparador.close();
+
+			}else{
+				sql = "INSERT INTO jogadas (jogador_id, tentativas, acertos) VALUES (?, ?, ?)";	
+				PreparedStatement preparador = con.prepareStatement(sql);
+				preparador.setInt(1, usuario.getId());
+				preparador.setInt(2, usuario.getTentativas());
+				preparador.setInt(3, usuario.getAcertos());
+				preparador.execute();
+				preparador.close();
+			}
+
+		} catch (SQLException e) {
+			request.setAttribute("errorMessage", "COD: " + e.getErrorCode()
+					+ " " + e.getMessage().toString());
+		}
+		
+	}
+
 	public void cadastrar(Gamer usuario, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
@@ -73,8 +131,9 @@ public class Jogador extends HttpServlet {
 			preparador.setString(2, usuario.getLogin());
 			preparador.setString(3, usuario.getSenha());
 
-			if(verificaLogin(usuario.getLogin())){
-				throw new Exception("Este Login ("+usuario.getLogin()+") já esta sendo usado por favor escolha outro!");
+			if (verificaLogin(usuario.getLogin())) {
+				throw new Exception("Este Login (" + usuario.getLogin()
+						+ ") já esta sendo usado por favor escolha outro!");
 			}
 
 			preparador.execute();
@@ -112,7 +171,7 @@ public class Jogador extends HttpServlet {
 	private boolean verificaLogin(String login) throws Exception {
 
 		ResultSet res = null;
-		
+
 		try {
 
 			String sql = "SELECT id FROM usuarios WHERE login = ?";
@@ -123,7 +182,7 @@ public class Jogador extends HttpServlet {
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
-		
+
 		return res.next() ? true : false;
 
 	}

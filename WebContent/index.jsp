@@ -36,7 +36,7 @@
 			<%
 				}
 			%>
-			
+
 			<%
 				if (request.getAttribute("errorMessage") != null) {
 			%>
@@ -49,8 +49,8 @@
 
 			<%
 				if (request.getSession().getAttribute("jogador") != null) {
-					Gamer jogador = (Gamer)request.getSession().getAttribute("jogador");
-					
+					Gamer jogador = (Gamer) request.getSession().getAttribute(
+							"jogador");
 			%>
 
 			<h3 id="overview-doctype">Boa Sorte!</h3>
@@ -62,9 +62,10 @@
 							readonly="readonly" value="<%=Game.getRandCell()%>">
 					</div>
 					<div class="form-group">
-						<label for="gamer">Jogador: </label><%=jogador.Nome %> <br/> 
-						<input type="hidden" name="gamer" value="<%=jogador.Id %>" /> 
-						<label>Login: </label> <%=jogador.Login %>
+						<label for="gamer">Jogador: </label><%=jogador.Nome%>
+						<br /> <input type="hidden" name="gamer" value="<%=jogador.Id%>" />
+						<label>Login: </label>
+						<%=jogador.Login%>
 					</div>
 					<div class="form-group">
 						<label for="resposta">Resposta</label><br /> <input type="radio"
@@ -73,28 +74,31 @@
 							value="<%=Game.BLACK%>" /> <label>BLACK</label>
 					</div>
 				</div>
-				<%
-					} else {
-						
-					request.setAttribute("errorMessage", "Ocorreu um erro, verifique seus dados e tente novamente!");
-						
-					getServletConfig().getServletContext()
-								.getRequestDispatcher("/login.jsp")
-								.forward(request, response);
-					}
-				%>
 				<div class="col-md-8">
 					<h3 id="overview-doctype">Resultado Parcial</h3>
-					${jogo}
+					<%=jogador.getJogadas()%>
 				</div>
 				<div class="col-md-12">
 					<div class="well">
 						<input type="submit" value="ENVIAR" class="btn btn-primary">
-						<a href="requestGame" class="btn btn-warning">Zerar Resultados</a>
-						<a class="btn btn-success" href="cadUsuario.jsp">Cadastrar
-							Usuário</a>
+						<a class="btn btn-danger" href="logoff.jsp">Sair</a>
+						<%
+							if (jogador.getTentativas() >= 20) {
+						%>
+						<a class="btn btn-default" href="ranking.jsp">Ranking</a>
+						<%
+							}
+						%>
 					</div>
 				</div>
+
+				<%
+					} else {
+						request.setAttribute("errorMessage",
+								"Ocorreu um erro, verifique seus dados e tente novamente!");
+						response.sendRedirect("login.jsp");
+					}
+				%>
 			</form>
 		</div>
 	</div>

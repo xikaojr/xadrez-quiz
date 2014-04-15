@@ -1,5 +1,6 @@
 package dao;
 
+import game.Game;
 import game.Gamer;
 
 import java.io.IOException;
@@ -25,30 +26,31 @@ public class Login extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		
+
 		String login = request.getParameter("login");
 		String senha = request.getParameter("senha");
 
 		Gamer jogador = new Gamer();
 
-		jogador.setLogin(login);
-		jogador.setSenha(senha);
-
 		try {
+			
+			jogador.setLogin(login);
+			jogador.setSenha(senha);
+
 			auth(jogador, request, response);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			request.setAttribute("errorMessage",
 					"Ocorreu um erro, " + e.getMessage());
 
 			request.setAttribute("jogador", jogador);
-
-			getServletConfig().getServletContext()
-					.getRequestDispatcher("/login.jsp")
-					.forward(request, response);
+			
+			 getServletConfig().getServletContext()
+		    	.getRequestDispatcher("/login.jsp").forward(request,response);
+			 
 		}
 	}
-	
 
 	private void auth(Gamer jogador, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -56,61 +58,71 @@ public class Login extends HttpServlet {
 		String sql = "SELECT * FROM usuarios WHERE login = ? AND senha = ?";
 		PreparedStatement preparador = con.prepareStatement(sql);
 
+		if (jogador.getLogin().isEmpty())
+			throw new Exception("Login é obrigatório");
+		if (jogador.getSenha().isEmpty())
+			throw new Exception("Senha é obrigatório");
 
-			if (jogador.getLogin().isEmpty())
-				throw new Exception("Login é obrigatório");
-			if (jogador.getSenha().isEmpty())
-				throw new Exception("Senha é obrigatório");
-					
-	try {
-		preparador.setString(1, jogador.getLogin());
-		preparador.setString(2, jogador.getSenha());
-		
-		ResultSet res = preparador.executeQuery();
-		
-		if (res.next()) {
-			
-			jogador.setId(res.getInt("id"));
-			jogador.setNome(res.getString("nome"));
-			
-			request.setAttribute("successMessage",
-					"Login realizado com sucesso, bom jogo!");
-			
-			newSession(request, response, jogador);
-			
-			getServletConfig().getServletContext()
-					.getRequestDispatcher("/index.jsp")
-					.forward(request, response);
-		} else {
-			preparador.close();
-			request.setAttribute("errorMessage",
-					"Usuário não encontrado ou verifique seus dados!");
-			getServletConfig().getServletContext()
-					.getRequestDispatcher("/login.jsp")
-					.forward(request, response);
-		}
+		try {
+			preparador.setString(1, jogador.getLogin());
+			preparador.setString(2, jogador.getSenha());
+
+			ResultSet res = preparador.executeQuery();
+
+			if (res.next()) {
+
+				jogador.setId(res.getInt("id"));
+				jogador.setNome(res.getString("nome"));
+				
+				request.setAttribute("successMessage",
+						"Login realizado com sucesso, bom jogo!");
+				
+				newSession(request, response, jogador);
+				
+				initializeResults(jogador, request);
+				
+				response.sendRedirect("index.jsp");
+			} else {
+				preparador.close();
+				throw new Exception("Usuário não encontrado, verifique seus dados  tente novamente!");
+			}
 			preparador.close();
 		} catch (Exception e) {
 			preparador.close();
-			request.setAttribute("errorMessage",
-					"Erro: " + e.getMessage());
-
-			request.setAttribute("jogador", jogador);
-
+			request.setAttribute("errorMessage", "Erro: " + e.getMessage());
+			 
 			getServletConfig().getServletContext()
-					.getRequestDispatcher("/login.jsp")
-					.forward(request, response);
+		    	.getRequestDispatcher("/login.jsp").forward(request,response);
 		}
 
 	}
 	
+	public void initializeResults(Gamer jogador, HttpServletRequest request) throws Exception{
+		try {
+			Game jogo = new Game();
+	    	
+			ResultSet jogadas = Jogador.getJogadas(jogador.getId());
+			
+			if (jogadas.next()) {
+				jogador.setTentativas(jogadas.getInt("tentativas"));
+				jogador.setAcertos(jogadas.getInt("acertos"));
+			}
+			
+			jogo.print(request);
+
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
+
 	public void newSession(HttpServletRequest request,
-			HttpServletResponse response, Gamer jogador) throws Exception{
+			HttpServletResponse response, Gamer jogador) throws Exception {
+
+		request.getSession().invalidate();
+		HttpSession session = request.getSession(true);
+		session.setAttribute("AUTHENTICATED", new Boolean(true));
+		session.setAttribute("jogador", jogador);
 		
-        request.getSession().invalidate();
-        HttpSession session = request.getSession(true);
-        session.setAttribute("AUTHENTICATED", new Boolean(true));
-        session.setAttribute("jogador", jogador);
 	}
 
 }

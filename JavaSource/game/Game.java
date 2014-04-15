@@ -1,8 +1,8 @@
 package game;
-
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+
 
 public class Game {
 
@@ -10,10 +10,10 @@ public class Game {
 	public static String BLACK = "BLACK";
 
 	public Game() {
-		// TODO Auto-generated constructor stub
+	
 	}
 
-	public String print(HttpServletRequest request) {
+	public String print(HttpServletRequest request) throws Exception {
 		
 		Gamer jogador = (Gamer) request.getSession().getAttribute("jogador");
 		
@@ -24,6 +24,8 @@ public class Game {
 				+ "<th>Acertos</th>" + "<th>Aproveitamento</th>" + "</tr>";
 		result += jogador.printResult();
 		result += "</table>";
+		jogador.setJogadas(result);
+		
 		return result;
 	}
 
@@ -60,5 +62,6 @@ public class Game {
 	}
 
 	public static void main(String[] args) {
+		
 	}
 }

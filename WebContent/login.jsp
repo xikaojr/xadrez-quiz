@@ -16,22 +16,27 @@
 </head>
 <body>
 	<div class="container">
+		<%
+			if (request.getAttribute("errorMessage") != null) {
+		%>
+		<div class="col-md-12">
+			<div class="alert alert-danger">${errorMessage}</div>
+		</div>
+		<%
+			}
+		%>
+
 		<form class="form-signin" role="form" action="login" method="POST">
 			<h2 class="form-signin-heading">Log in</h2>
-			
-			<% if (request.getAttribute("errorMessage") != null) { %>
-						<div class="col-md-12">
-				<div class="alert alert-danger">${errorMessage}</div>
-			</div>
-			<% } %>
-			
-			
-			<input type="text" name="login" class="form-control" placeholder="Login" required autofocus> 
-			<input type="password" name="senha" class="form-control" placeholder="Senha" required> 
-			<label class="checkbox"> 
-				<input type="checkbox" value="remember-me"> Mater-me conectado
+			<input type="text" name="login" class="form-control"
+				placeholder="Login" required autofocus> <input
+				type="password" name="senha" class="form-control"
+				placeholder="Senha" required> <label class="checkbox">
+				<input type="checkbox" value="remember-me"> Mater-me
+				conectado
 			</label>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Log
+				in</button>
 		</form>
 	</div>
 	<!-- /container -->

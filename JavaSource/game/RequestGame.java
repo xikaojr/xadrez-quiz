@@ -1,6 +1,9 @@
 package game;
 
+import dao.Jogador;
+
 import java.io.IOException;
+import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,8 +25,14 @@ public class RequestGame extends HttpServlet {
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		jogo = new Game();
-		request.setAttribute("jogo", jogo.print(request));
+		try {
+		
+		//request.getSession().setAttribute("jogo", jogo.print(request));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	    getServletConfig().getServletContext()
 	    	.getRequestDispatcher("/index.jsp").forward(request,response);
 	}
@@ -31,7 +40,6 @@ public class RequestGame extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    String cell = request.getParameter("cell");
 	    String resp = request.getParameter("resposta");
-	    
 	    
 	    try {
 	    	
@@ -45,14 +53,15 @@ public class RequestGame extends HttpServlet {
 		    	jogador.Acertos++;
 		    }
 		    
-		    request.setAttribute("jogo", jogo.print(request));
-		    getServletConfig().getServletContext()
-		    	.getRequestDispatcher("/index.jsp").forward(request,response);
+		    Jogador.cadastrarJogada(jogador, request, response);
+		    
+		    jogo.print(request);
+		    
+		    response.sendRedirect("index.jsp");
+		    
 		} catch (Exception e) {
 		    request.setAttribute("errorMessage", e.getMessage());
-		    getServletConfig().getServletContext()
-		    	.getRequestDispatcher("/index.jsp").forward(request,response);
-
+		    response.sendRedirect("index.jsp");
 		}
 	}
 		
